@@ -1,0 +1,28 @@
+.main-todo{
+    margin-top: 5%;
+    max-width: 900px;
+   
+}
+.todo-item{
+    min-width: 300px;
+    
+}
+.email{
+    min-width: 250px;
+}
+.password{
+    min-width: 120px;
+}
+.newTodo{
+    min-width: 100px;
+    min-width: 80%;
+
+}
+
+.table{
+    margin-top: 2%;
+    margin-bottom: 5%;
+}
+.badge{
+    margin: 1%;
+}

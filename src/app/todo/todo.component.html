@@ -1,0 +1,174 @@
+<!-- navbar starts-->
+<nav class="navbar navbar-light bg-light">
+  <a class="navbar-brand" href="#">ToDo App</a>
+  
+  <div class="container-lg justify-content-end">
+    <button type="button" (click)="changeLoginMode()" class="btn btn-success" *ngIf="isLoginMode && !isLoggedIn()"
+      style="margin-right: 1%;">Login </button>
+    <button type="button" (click)="changeLoginMode()" class="btn btn-primary" *ngIf="!isLoginMode && !isLoggedIn()"
+      style="margin-right: 1%;">Register</button>
+    <button type="button" (click)="onLogout()" class="btn btn-warning" *ngIf="isLoggedIn()"
+      style="margin-right: 1%;">Logout</button>
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" *ngIf="!isLoggedIn()">
+      <div class="row">
+        <div class="col">
+          <div class="form-floating">
+            <input type="email" class="form-control email" name="email" formControlName="email" placeholder="Email">
+            <label for="floatingInput">email</label>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-floating">
+            <input type="password" class="form-control password" name="password" formControlName="password"
+              placeholder="Şifre">
+            <label for="floatingPassword">Password</label>
+          </div>
+        </div>
+        <div class="col">
+          <button class="btn btn-lg btn-primary" name="button" type="submit" [disabled]="loginForm.invalid">
+            <span *ngIf="!loginLoading"><i class="fas fa-sign-in-alt"></i></span>
+            <div *ngIf="loginLoading">
+              <div class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</nav>
+<!-- navbar ends-->
+<div *ngIf="!isLoggedIn()" class="alert alert-warning" role="alert">
+  You need to login or register to use ToDo App
+</div>
+
+
+<!--main content starts-->
+<div class="container" style="min-height: 410px;">
+  <div class="row main-todo" *ngIf="isLoggedIn()">
+    <div class="table-responsive-lg">
+ 
+   
+        <form  style="margin-bottom:3%;">
+          <div class="row">
+            <div class="col col-lg-3">
+              <input type="text" class="form-control" name="search" [(ngModel)]="searchText" placeholder="Search">
+            </div>        
+          </div>
+        </form>
+      
+       <!-- add todo form starts-->
+        <form [formGroup]="todoForm" (ngSubmit)="addTodo()" class="">
+          <div class="row">
+            <div class="col col-lg-8">
+              <input type="text" class="form-control" name="newTodo" formControlName="newTodo" placeholder="New Todo">
+            </div>
+            <div class="col col-lg-1">
+              <button type="submit" class="btn btn-primary" [disabled]="todoForm.invalid">Add</button>
+            </div>
+          </div>
+        </form>
+      <!-- add todo form ends-->
+      <!-- todo table Active starts-->
+      <table class="table table-warning table-bordered  table-hover table-responsive">
+        <thead>
+        
+          <tr>  <span class="badge rounded-pill bg-warning text-dark">Active</span></tr>
+        </thead>
+        <tbody>
+
+          <tr *ngFor="let todo of todos|filter:searchText">
+            <div *ngIf="todo.status">
+              <td *ngIf="editTodo!=todo">{{todo.text}} </td>
+              <td *ngIf="editTodo==todo">
+                <form (submit)="updateTodo()">
+                  <input type="text" class="form-control" required [(ngModel)]='editTodo.text' name="editTodoInput">
+                </form>
+              </td>
+
+
+              <td style="white-space: nowrap; width: 1%;">
+                <div class="btn-group" role="group" aria-label="todo button group">
+
+
+                  <button [ngClass]="todo.status ? 'btn btn-light': 'btn btn-success'" (click)="changeStatus(todo)">
+                    <i *ngIf="statusLoading?.id!=todo.id" class="fas fa-check"></i>
+                    <div *ngIf="statusLoading?.id==todo.id && statusLoading?.loading"
+                      class="spinner-border text-primary spinner-grow-sm" role="status"></div>
+                  </button>
+
+                  <button class="btn btn-info" (click)="onEditTodo(todo)"><i class="fas fa-edit"></i></button>
+
+
+                  <button class="btn btn-danger" (click)="deleteTodo(todo)">
+                    <i *ngIf="deleteLoading?.id!=todo.id" class="far fa-trash-alt"></i>
+                    <div *ngIf="deleteLoading?.id==todo.id && deleteLoading?.loading"
+                      class="spinner-border text-light spinner-grow-sm" role="status"></div>
+                  </button>
+
+                </div>
+              </td>
+            </div>
+          </tr>
+            
+      
+        </tbody>
+      </table>
+      <!-- todo table Active ends-->
+      <!-- todo table Completed starts-->
+      <table class="table table-success table-bordered table-hover table-responsive">
+        <thead>
+       
+          <tr>
+            <span class="badge rounded-pill bg-success text-dark">Completed</span>     
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let todo of todos|filter:searchText">
+            <div *ngIf="!todo.status">
+              <td *ngIf="editTodo!=todo">{{todo.text}} </td>
+              <td *ngIf="editTodo==todo">
+                <form (submit)="updateTodo()">
+                  <input type="text" class="form-control" required [(ngModel)]='editTodo.text' name="editTodoInput">
+                </form>
+              </td>
+
+
+              <td style="white-space: nowrap; width: 1%;">
+                <div class="btn-group" role="group" aria-label="todo button group">
+
+
+                  <button [ngClass]="todo.status ? 'btn btn-light': 'btn btn-success'" (click)="changeStatus(todo)">
+                    <i *ngIf="statusLoading?.id!=todo.id" class="fas fa-check"></i>
+                    <div *ngIf="statusLoading?.id==todo.id && statusLoading?.loading"
+                      class="spinner-border text-primary spinner-grow-sm" role="status"></div>
+                  </button>
+
+                  <button class="btn btn-info" (click)="onEditTodo(todo)"><i class="fas fa-edit"></i></button>
+
+
+                  <button class="btn btn-danger" (click)="deleteTodo(todo)">
+                    <i *ngIf="deleteLoading?.id!=todo.id" class="far fa-trash-alt"></i>
+                    <div *ngIf="deleteLoading?.id==todo.id && deleteLoading?.loading"
+                      class="spinner-border text-light spinner-grow-sm" role="status"></div>
+                  </button>
+
+                </div>
+              </td>
+            </div>
+          </tr>
+        </tbody>
+      </table>
+      <!-- todo table Completed ends-->
+    </div>
+  </div>
+</div>
+<!--main content ends-->
+
+<div class="container" >
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    <p class="col-md-4 mb-0 text-muted">&copy; 2021 TodoApp, Inc</p>
+
+      <p>Source Code: <a href="https://github.com/mertyalcin-code" target="_blank">Github <i class="fab fa-github"></i></a></p>
+ 
+  </footer>
+</div>
