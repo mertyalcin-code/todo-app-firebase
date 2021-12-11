@@ -1,10 +1,11 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 import { AppComponent } from './app.component';
+import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { TodoComponent } from './todo/todo.component';
 
 @NgModule({
@@ -19,7 +20,7 @@ import { TodoComponent } from './todo/todo.component';
     HttpClientModule,
     Ng2SearchPipeModule
   ],
-  providers: [],
+  providers: [ ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
