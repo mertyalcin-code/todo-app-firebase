@@ -1,6 +1,10 @@
 {
   "name": "todo-app-firebase",
   "version": "0.0.0",
+  "engines": {
+    "node": "14.18.1",
+    "npm": "6.14.15"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
